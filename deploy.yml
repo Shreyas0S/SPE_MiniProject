@@ -12,7 +12,9 @@
     - name: Display Docker Pull Result
       debug:
         var: docker_pull_result
-        
+
+    - name: Remove existing container
+      shell: docker rm -f scientific_calculator || true
     - name: Start Docker service
       service:
         name: docker
