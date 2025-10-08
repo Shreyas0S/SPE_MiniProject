@@ -1,3 +1,3 @@
 # SPE_MiniProject
 
-Jenkins CI/CD
+Jenkins CI/CD Pipeline
