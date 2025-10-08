@@ -6,7 +6,7 @@ pipeline {
     DOCKER_IMAGE_NAME = 'scientific_calculator'
     DOCKERHUB_REPO    = 'shreyas0s'                 // DockerHub namespace
     DOCKERHUB_CRED    = 'DockerHubCred'         // credentialsId (username/password)
-    GIT_REPO_URL      = 'https://github.com/Shreyas0S/Test_MiniProject.git'
+    GIT_REPO_URL      = 'https://github.com/Shreyas0S/SPE_MiniProject.git'
     GIT_BRANCH        = 'main'
   }
 
