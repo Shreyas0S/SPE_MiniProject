@@ -1,0 +1,21 @@
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Local libs / downloaded jars not managed by Maven
+lib/
+
+# IDE metadata
+.idea/
+.project
+.classpath
+.settings/
+.vscode/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
