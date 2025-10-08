@@ -39,8 +39,19 @@ pipeline {
       steps {
         sh 'docker --version'
         script {
-          // Derive project version from the built jar name (or from pom via Maven exec if needed)
-          def version = sh(returnStdout: true, script: "ls target | grep '^calculator-.*SNAPSHOT.jar' | sed 's/calculator-\\(.*\\)\.jar/\\1/'").trim()
+          // Derive project version from the built jar name in a shell-safe way (no fragile escaping)
+          def version = sh(returnStdout: true, script: '''
+            set -e
+            jar=$(ls target/calculator-*.jar 2>/dev/null | head -n1 || true)
+            if [ -z "$jar" ]; then
+              echo "" # will fallback to 'latest'
+            else
+              jar=${jar##*/}            # strip path
+              ver=${jar#calculator-}    # drop prefix
+              ver=${ver%.jar}           # drop suffix
+              echo "$ver"
+            fi
+          ''').trim()
           if (!version) { version = 'latest' }
           sh "docker build --build-arg JAR_FILE=target/calculator-${version}.jar -t ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:${version} -t ${DOCKERHUB_REPO}/${DOCKER_IMAGE_NAME}:latest ."
         }
