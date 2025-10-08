@@ -1,43 +1,21 @@
 ---
----
-- name: Deploy scientific_calculator container
+- name: Pull Docker Image from Docker Hub
   hosts: localhost
   become: false
-  vars:
-    image_name: "shreyas0s/scientific_calculator"
-    container_name: "scientific_calculator"
   tasks:
-    - name: Ensure Docker service is running
+    - name: Pull Docker Image
+      docker_image:
+        name: "shreyas0s/scientific_calculator"
+        source: pull
+      register: docker_pull_result
+
+    - name: Display Docker Pull Result
+      debug:
+        var: docker_pull_result
+        
+    - name: Start Docker service
       service:
         name: docker
         state: started
-
-    - name: Pull latest image
-      docker_image:
-        name: "{{ image_name }}"
-        source: pull
-      register: pulled
-
-    - name: Remove existing container if present (stopped or running)
-      docker_container:
-        name: "{{ container_name }}"
-        state: absent
-      ignore_errors: true
-
-    - name: Run fresh container
-      docker_container:
-        name: "{{ container_name }}"
-        image: "{{ image_name }}"
-        state: started
-        restart_policy: unless-stopped
-        interactive: true
-        tty: true
-        detach: true
-
-    - name: Show running container info
-      shell: docker ps --filter "name={{ container_name }}" --format '{{"{{.ID}} {{.Image}} {{.Status}}"}}'
-      register: container_info
-
-    - name: Display container info
-      debug:
-        var: container_info.stdout
+    - name: Running container
+      shell: docker run -it -d --name scientific_calculator shreyas0s/scientific_calculator
