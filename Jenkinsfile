@@ -8,7 +8,6 @@ pipeline {
     DOCKERHUB_CRED    = 'DockerHubCred'         // credentialsId (username/password)
     GIT_REPO_URL      = 'https://github.com/Shreyas0S/SPE_MiniProject.git'
     GIT_BRANCH        = 'main'
-    EMAIL_RECIPIENTS  = 'shreyas080105@gmail.com'       // comma-separated list; override in Jenkins or here
   }
 
   stages {
@@ -80,29 +79,20 @@ pipeline {
 
   post {
     success {
-      script {
-        def subject = "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
-        def body = """
-Build succeeded\n\nJob: ${env.JOB_NAME}\nBuild: #${env.BUILD_NUMBER}\nBranch: ${env.GIT_BRANCH}\nResult: ${currentBuild.currentResult}\nURL: ${env.BUILD_URL}\n"""
-        try {
-          emailext(to: env.EMAIL_RECIPIENTS, subject: subject, body: body, attachLog: true)
-        } catch (err) {
-          mail(to: env.EMAIL_RECIPIENTS, subject: subject, body: body)
+            mail to: 'shreyas080105@gmail.com',
+                 subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                 body: "Good news! The Jenkins job '${env.JOB_NAME}' build #${env.BUILD_NUMBER} succeeded.\n\nCheck the details at: ${env.BUILD_URL}"
         }
-      }
-    }
-    failure {
-      script {
-        def subject = "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
-        def body = """
-Build failed\n\nJob: ${env.JOB_NAME}\nBuild: #${env.BUILD_NUMBER}\nBranch: ${env.GIT_BRANCH}\nResult: ${currentBuild.currentResult}\nURL: ${env.BUILD_URL}\n\nCheck console log for details."""
-        try {
-          emailext(to: env.EMAIL_RECIPIENTS, subject: subject, body: body, attachLog: true)
-        } catch (err) {
-          mail(to: env.EMAIL_RECIPIENTS, subject: subject, body: body)
+        failure {
+            mail to: 'shreyas080105@gmail.com',
+                 subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                 body: "Oops! The Jenkins job '${env.JOB_NAME}' build #${env.BUILD_NUMBER} failed.\n\nCheck the details at: ${env.BUILD_URL}"
         }
-      }
-    }
+        unstable {
+            mail to: 'shreyas080105@gmail.com',
+                 subject: "UNSTABLE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                 body: "The Jenkins job '${env.JOB_NAME}' build #${env.BUILD_NUMBER} is unstable.\n\nCheck the details at: ${env.BUILD_URL}"
+        }
     always { cleanWs() }
   }
 }
