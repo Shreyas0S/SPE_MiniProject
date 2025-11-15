@@ -1,5 +1,5 @@
 package com.example.calculator;
-
+// scientific calculator with basic operations
 public class Calculator {
     public Calculator() {}
 
