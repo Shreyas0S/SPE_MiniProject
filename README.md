@@ -1,4 +1,5 @@
 # SPE_MiniProject
 
 Jenkins CI/CD Pipeline
-Calculator
+Docker Ansible Maven
+Scientific Calculator
