@@ -76,7 +76,7 @@ pipeline {
       }
     }
   }
-
+  // email notification
   post {
     success {
             mail to: 'shreyas080105@gmail.com',
