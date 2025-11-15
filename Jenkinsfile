@@ -39,7 +39,7 @@ pipeline {
       steps {
         sh 'docker --version'
         script {
-          // Derive project version from the built jar name in a shell-safe way (no fragile escaping)
+          // Derive project version from the built jar name
           def version = sh(returnStdout: true, script: '''
             set -e
             jar=$(ls target/calculator-*.jar 2>/dev/null | head -n1 || true)
